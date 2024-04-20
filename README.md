@@ -3,4 +3,4 @@
 
 # Tugas
 1. [Materialized views & Transactions](/tugas/materialized-views-transactions.md)
-2. [Multimedia](/tugas/121450146.md)
+2. [Multimedia](/tugas/MultiMedia.md)
