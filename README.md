@@ -1,4 +1,4 @@
-# *SD3203 Tenologi Basis Data*
+# *SD3203 Teknologi Basis Data*
 ## Alber Analafean_121450146_RC
 
 # Tugas
