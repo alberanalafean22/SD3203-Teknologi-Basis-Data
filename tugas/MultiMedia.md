@@ -37,6 +37,8 @@ disk_dir.mkdir(parents=True, exist_ok=True)
 lmdb_dir.mkdir(parents=True, exist_ok=True)
 hdf5_dir.mkdir(parents=True, exist_ok=True)
 ```
+
+
 **A.Penyimpanan Data** <br>
 **Menyimpan ke  disk** <br>
 ```
@@ -59,6 +61,7 @@ def store_single_disk(image, image_id, label):
         )
         writer.writerow([label])
 ```
+
 **Menyimpan ke LMDB** <br>
 ```
 class CIFAR_Image:
@@ -104,6 +107,7 @@ def store_single_lmdb(image, image_id, label):
         txn.put(key.encode("ascii"), pickle.dumps(value))
     env.close()
 ```
+
 **Menyimpan dengan HDF5**<br>
 ```
 import h5py
@@ -128,6 +132,7 @@ def store_single_hdf5(image, image_id, label):
     )
     file.close()
 ```
+
 **Menyimpan Dalam satu gambar** <br>
 ```
 _store_single_funcs = dict(
@@ -245,12 +250,12 @@ for cutoff in cutoffs:
 ![image](https://github.com/alberanalafean22/SD3203-Teknologi-Basis-Data/assets/105194751/32b77f25-4c87-44c0-8308-9aa0dc13b5ce)
 
 
-Grafik menunjukkan waktu diperlukan  Menyimpan Data<br>
-Terlihat setelah dilakukan proses menyimpan banyak gambar, waktu diperlukan HDF5 sangat lambat dibandingkan PNG file dan LMDB. Bisa dikatakan penyimpanan disk & LMDB sangat cocok dalam menyimpan data gambar lebih besar
+**Grafik menunjukkan waktu diperlukan Menyimpan Data**<br>
+Terlihat setelah dilakukan proses menyimpan banyak gambar, waktu diperlukan HDF5 sangat lambat dibandingkan PNG file dan LMDB. Bisa dikatakan penyimpanan disk & LMDB sangat cocok dalam menyimpan data gambar lebih besar, namun juga bisa dipengaruhi oleh beberapa faktor seperti sistem operasi, perangkat digunakan bahkan ukuran data digunakan.
 ![1output](https://github.com/alberanalafean22/SD3203-Teknologi-Basis-Data/assets/105194751/517fa433-c13f-46ee-ad1c-d34c519380ad)
 ![2output](https://github.com/alberanalafean22/SD3203-Teknologi-Basis-Data/assets/105194751/3e390adf-5ddd-4117-b69a-7ff853e5fd00)
 
-**B.Membaca Data Gambar**
+**B.Membaca Data Gambar**<br>
 **Membaca dari disk** <br>
 ```
 def read_single_disk(image_id):
@@ -274,7 +279,8 @@ def read_single_disk(image_id):
 
     return image, label
 ```
-Membaca dari LMDB
+
+**Membaca dari LMDB**<br>
 ```
 def read_single_lmdb(image_id):
     """ Stores a single image to LMDB.
@@ -303,7 +309,8 @@ def read_single_lmdb(image_id):
 
     return image, label
 ```
-Membaca dari HDF5
+
+**Membaca dari HDF5**<br>
 ```
 def read_single_hdf5(image_id):
     """ Stores a single image to HDF5.
@@ -329,7 +336,8 @@ _read_single_funcs = dict(
     disk=read_single_disk, lmdb=read_single_lmdb, hdf5=read_single_hdf5
 )
 ```
-Membaca dari banyak gambar <br>
+
+**Membaca dari banyak gambar**<br>
 ```
 def read_many_disk(num_images):
     """ Reads image from disk.
@@ -410,7 +418,7 @@ _read_many_funcs = dict(
     disk=read_many_disk, lmdb=read_many_lmdb, hdf5=read_many_hdf5
 )
 ```
-Waktu diperlukan dalam membaca banyak gambar<br>
+**Waktu diperlukan dalam membaca banyak gambar**<br>
 ```
 from timeit import timeit
 
@@ -431,18 +439,25 @@ for cutoff in cutoffs:
 ```
 ![image](https://github.com/alberanalafean22/SD3203-Teknologi-Basis-Data/assets/105194751/de4fa1a0-9fad-4bb8-92b0-2afbe9e9223f)
 
-Grafik perbedaan waktu dalam membaca penyimpanan data<br>
+**Grafik perbedaan waktu dalam membaca penyimpanan data**<br>
+Dari grafik perbedaan waktu, terlihat bahwa LMDB memiliki waktu lebih cepat daripada HDF5 dan PNG files
 ![11output](https://github.com/alberanalafean22/SD3203-Teknologi-Basis-Data/assets/105194751/74bbee30-503f-49d6-99ec-fa32a6f75edc)
 ![22output](https://github.com/alberanalafean22/SD3203-Teknologi-Basis-Data/assets/105194751/21fd9359-2d7f-467c-a8f7-1ef26dc0168e)
 
 
-Jumlah Memori yang terpakai dala menyimpan data <br>
+**Jumlah Memori yang terpakai dala menyimpan data**<br>
+Dari hasil penyimpanan terlihat bahwa pengunaan memory LMDB lebih besar dibandingkan penyimpanan disk dan HDFS. Pengunaan memori ini juga dipengaruhi oleh beberapa faktor seperti Sistem operasi digunakan, perangat serta ukuran data disimpan sehingga terdapat perbedaan diantara jenis penyimpanan. Walaupun secara waktu LDMB menang namun dalam pengunaan memori HDF5 sangat efisien digunakan
 ![memory](https://github.com/alberanalafean22/SD3203-Teknologi-Basis-Data/assets/105194751/ae9e13d3-b3f9-4d0d-962b-1d9e512cbcb2)
+
+**Kesimpulan:**<br>
+Dari proses menyimpan data gambar serta membaca penyimpanan data gambar, menunjukkan bahwa masing masing
+teknologi penyimpanan memiliki kelebihan bahkan kekurangan masing-masing. Dalam segi kecepatan dalam menyimpan LMDB dan PNG file sangat cocok digunakan. Namun dalam sisi pengunaan memori HDF5 dan PNG file sangat cocok dalam mengurangi ruang penyimpanan. Secara skalabilitas penyimpana data cocok mengunakan LMDB dan secara fleksibilitas pengunaan HDF5 sangatlah cocok.
+
 
 
 Lampiran: <br>
 1.Referensi <br>
 https://realpython.com/storing-images-in-python/#storing-to-disk <br>
 2.Code: <br> 
-https://colab.research.google.com/
+https://colab.research.google.com/drive/1TbN1rx4OxWqXV4o6_ZSPbxcIQPitfDCr?usp=sharing
 
